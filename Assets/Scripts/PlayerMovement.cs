@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     public bool onRope = false;
     public bool jumpingPermission;
 
+    public float dashCDT;
+
     void Start() {
         rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
         jumpingPermission = true;
@@ -68,6 +70,10 @@ public class PlayerMovement : MonoBehaviour
                 movementVelocity = -speed;
             }
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, movementVelocity);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C)) {
+
         }
         
     }
