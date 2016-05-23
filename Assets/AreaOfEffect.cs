@@ -9,8 +9,8 @@ public class AreaOfEffect : MonoBehaviour
     public int gunDamage = 2;
     bool facingRight;
     PlayerMovement playerMov;
-    public float CDT;
-    float timeSinceLastCDT;
+    public float KCDT;
+    float timeSinceLastKCDT;
     //CDT = CoolDownTime
     Rigidbody2D rb;
     public LayerMask mask;
@@ -34,10 +34,10 @@ public class AreaOfEffect : MonoBehaviour
             rb.freezeRotation = true;
             playerMov.jumpingPermission = false;
 
-            timeSinceLastCDT += Time.deltaTime;
-            if (timeSinceLastCDT > CDT)
+            timeSinceLastKCDT += Time.deltaTime;
+            if (timeSinceLastKCDT > KCDT)
             {
-                timeSinceLastCDT -= CDT;
+                timeSinceLastKCDT -= KCDT;
 
                 if (facingRight == true && playerMov.onRope == false)
                 {
@@ -46,11 +46,11 @@ public class AreaOfEffect : MonoBehaviour
                         EnemiesInCollider[i].GetComponent<Zombear>().HP -= gunDamage;
                     }
 
-
+                    print("Damage taken right");
                 }
                 else if (facingRight == false && playerMov.onRope == false)
                 {
-
+                    print("Damage taken left");
                 }
             }
             else {
