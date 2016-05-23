@@ -13,16 +13,21 @@ public class PlayerMovement : MonoBehaviour
     public bool onRope = false;
     public bool jumpingPermission;
 
-    public float dashCDT;
     public float dashForce;
     public float dashTimer;
     bool isDashing;
     public float dashDuration;
     bool dashDirection;
 
+    Zombear zb;
+    public bool playerIsHit;
+    public int playerHP;
+
+
 
     void Start() {
         rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
+        zb = GameObject.Find("Zombear").GetComponent<Zombear>();
         jumpingPermission = true;
     }
 
@@ -52,6 +57,12 @@ public class PlayerMovement : MonoBehaviour
             {
                isDashing = true;
             }
+        }
+        if (playerIsHit == true) {
+            playerHP -= zb.enemyDMG;
+        }
+        if (playerHP == 0) {
+            print("Player dead");
         }
     }
 
