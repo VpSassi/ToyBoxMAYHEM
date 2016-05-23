@@ -13,11 +13,57 @@ public class PlayerMovement : MonoBehaviour
     public bool onRope = false;
     public bool jumpingPermission;
 
-    public float dashCDT;
+    public float dashForce;
+    public float dashTimer;
+    bool isDashing;
+    public float dashDuration;
+    bool dashDirection;
+
+    Zombear zb;
+    public bool playerIsHit;
+    public int playerHP;
+
+
 
     void Start() {
         rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
+        zb = GameObject.Find("Zombear").GetComponent<Zombear>();
         jumpingPermission = true;
+    }
+
+
+    void Update () {
+
+        if (isDashing == true) {
+        dashTimer += Time.deltaTime;
+
+            if (dashTimer < dashDuration && dashDirection == true) {
+                rb.MovePosition(transform.position + Vector3.right * dashForce * Time.deltaTime);
+            }
+            else if(dashTimer < dashDuration && dashDirection == false) {
+                rb.MovePosition(transform.position + Vector3.left * dashForce * Time.deltaTime);
+            }
+            else {
+                isDashing = false;
+                dashTimer = 0;
+            }
+        }
+
+        //dash += Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.C)) {
+
+            dashDirection = facingRight;
+            if (onRope == false)
+            {
+               isDashing = true;
+            }
+        }
+        if (playerIsHit == true) {
+            playerHP -= zb.enemyDMG;
+        }
+        if (playerHP == 0) {
+            print("Player dead");
+        }
     }
 
     void FixedUpdate()
@@ -72,9 +118,7 @@ public class PlayerMovement : MonoBehaviour
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, movementVelocity);
         }
 
-        if (Input.GetKeyDown(KeyCode.C)) {
 
-        }
         
     }
     //void OnTriggerEnter2D()

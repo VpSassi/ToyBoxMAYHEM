@@ -12,6 +12,7 @@ public class PewPew : MonoBehaviour {
     //CDT = CoolDownTime
     Rigidbody2D rb;
     public LayerMask mask;
+    public float pushForce;
 
     void Awake() {
         playerMov = GetComponent<PlayerMovement>();
@@ -37,10 +38,12 @@ public class PewPew : MonoBehaviour {
                     if (hit.collider != null)
                     {
                         if (hit.collider.tag == "Enemy") {
+                            hit.collider.GetComponent<Zombear>().isHit = true;
                             hit.collider.GetComponent<Zombear>().HP -= gunDamage;
-                            print("enemy hit");
+                            hit.collider.GetComponent<Rigidbody2D>().AddForce(Vector3.right * pushForce);
+
                         }
-                        print("HitRight");
+
                     }
                     
 
@@ -51,10 +54,12 @@ public class PewPew : MonoBehaviour {
                     {
                         if (hit.collider.tag == "Enemy")
                         {
+                            hit.collider.GetComponent<Zombear>().isHit = true;
                             hit.collider.GetComponent<Zombear>().HP -= gunDamage;
-                            print("enemy hit");
+                            hit.collider.GetComponent<Rigidbody2D>().AddForce(Vector3.left * pushForce);
+
                         }
-                        print("HitLeft");
+
                     }
                         //Debug.DrawRay(transform.position, backwards, Color.white);
                 }
