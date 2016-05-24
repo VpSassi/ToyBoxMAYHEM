@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 public class AreaOfEffect : MonoBehaviour
 {
-    List<GameObject> EnemiesInCollider;
+    public List<GameObject> EnemiesInCollider;
     public float distance = 100;
-    public int gunDamage = 2;
+    public int aoeGunDamage = 2;
     bool facingRight;
-    PlayerMovement playerMov;
+    public PlayerMovement playerMov;
     public float KCDT;
     float timeSinceLastKCDT;
     //CDT = CoolDownTime
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     public LayerMask mask;
 
     // public float blastRadius = 50;
@@ -25,6 +25,10 @@ public class AreaOfEffect : MonoBehaviour
         {
             EnemiesInCollider.Add(c.gameObject);
         }
+    }
+
+    void Update() {
+
         facingRight = playerMov.facingRight;
 
         if (Input.GetKey(KeyCode.X))
@@ -43,7 +47,7 @@ public class AreaOfEffect : MonoBehaviour
                 {
                     for (int i = 0; i < EnemiesInCollider.Count; i++)
                     {
-                        EnemiesInCollider[i].GetComponent<Zombear>().HP -= gunDamage;
+                        EnemiesInCollider[i].GetComponent<Zombear>().HP -= aoeGunDamage;
                     }
 
                     print("Damage taken right");
