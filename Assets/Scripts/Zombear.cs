@@ -16,6 +16,7 @@ public class Zombear : MonoBehaviour {
     public float attack;
     public float attackCDT;
     public bool attacking;
+    public float pPushForce;
 
     public Sprite enemyHit;
     Sprite enemyNormal;
@@ -62,7 +63,7 @@ public class Zombear : MonoBehaviour {
             pm.playerIsHit = true;
             print("attackHit");
             attack -= attackCDT;
-        }
+            }
         else pm.playerIsHit = false;
         }
 
@@ -70,7 +71,6 @@ public class Zombear : MonoBehaviour {
 
     }
     void OnTriggerEnter2D(Collider2D c) {
-
         if (c.tag == "Player") {
             attacking = true;
         }

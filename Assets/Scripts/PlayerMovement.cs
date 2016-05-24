@@ -22,12 +22,20 @@ public class PlayerMovement : MonoBehaviour
     Zombear zb;
     public bool playerIsHit;
     public int playerHP;
+    //public Sprite playerHit;
+    //public Sprite bunnyNormal;
+    //SpriteRenderer psr;
+    //public float pRecovery;
+    //public float pRecoveryCDT;
+    //public float pHitForce;
 
 
 
-    void Start() {
+    void Awake() {
         rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
         zb = GameObject.Find("Zombear").GetComponent<Zombear>();
+        //psr = GetComponent<SpriteRenderer>();
+        //bunnyNormal = psr.sprite;
         jumpingPermission = true;
     }
 
@@ -60,7 +68,22 @@ public class PlayerMovement : MonoBehaviour
         }
         if (playerIsHit == true) {
             playerHP -= zb.enemyDMG;
-        }
+
+/* 
+            GetComponent<Rigidbody2D>().velocity = new Vector2(
+                GetComponent<Rigidbody2D>().velocity.x, pHitForce);
+
+            psr.sprite = playerHit;
+            pRecovery += Time.deltaTime;
+            if(pRecovery > pRecoveryCDT) {
+                pRecovery -= pRecoveryCDT;
+                playerIsHit = false;
+                psr.sprite = bunnyNormal;
+            }
+
+*/
+            }
+        
         if (playerHP == 0) {
             print("Player dead");
         }
