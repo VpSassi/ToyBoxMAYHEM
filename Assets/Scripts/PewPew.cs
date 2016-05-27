@@ -14,10 +14,14 @@ public class PewPew : MonoBehaviour {
     public LayerMask mask;
     public float pushForce;
 
+    public AudioSource shoot;
+    public AudioSource hitEnemy; 
+
     void Awake() {
         playerMov = GetComponent<PlayerMovement>();
         timeSinceLastCDT = CDT;
         rb = GetComponent<Rigidbody2D>();
+
     }
 
 	void Update() {
@@ -32,6 +36,7 @@ public class PewPew : MonoBehaviour {
         timeSinceLastCDT += Time.deltaTime;
         if (timeSinceLastCDT > CDT) {
             timeSinceLastCDT -= CDT;
+            shoot.Play();
 
             if (facingRight == true && playerMov.onRope == false) {
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, 14, mask.value);
@@ -41,6 +46,7 @@ public class PewPew : MonoBehaviour {
                             hit.collider.GetComponent<Zombear>().isHit = true;
                             hit.collider.GetComponent<Zombear>().HP -= gunDamage;
                             hit.collider.GetComponent<Rigidbody2D>().AddForce(Vector3.right * pushForce);
+                            hitEnemy.Play();
 
                         }
 
@@ -57,7 +63,7 @@ public class PewPew : MonoBehaviour {
                             hit.collider.GetComponent<Zombear>().isHit = true;
                             hit.collider.GetComponent<Zombear>().HP -= gunDamage;
                             hit.collider.GetComponent<Rigidbody2D>().AddForce(Vector3.left * pushForce);
-
+                            hitEnemy.Play();
                         }
 
                     }

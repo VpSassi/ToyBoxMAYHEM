@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -29,9 +31,16 @@ public class PlayerMovement : MonoBehaviour
     //public float pRecoveryCDT;
     //public float pHitForce;
 
+    public AudioSource death;
+    public bool isDead;
+
+    public Text HPtext;
+    public Text GameOverText;
+    bool isPause;
 
 
     void Awake() {
+       // Time.timeScale = 0;
         rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
         zb = GameObject.Find("Zombear").GetComponent<Zombear>();
         //psr = GetComponent<SpriteRenderer>();
@@ -41,6 +50,10 @@ public class PlayerMovement : MonoBehaviour
 
 
     void Update () {
+
+
+        HPtext.text = "HP - " + playerHP;
+
 
         if (isDashing == true) {
         dashTimer += Time.deltaTime;
@@ -66,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
                isDashing = true;
             }
         }
-        if (playerIsHit == true) {
+        if (playerIsHit == true && playerHP > 0) {
             playerHP -= zb.enemyDMG;
 
 /* 
@@ -83,9 +96,28 @@ public class PlayerMovement : MonoBehaviour
 
 */
             }
-        
-        if (playerHP == 0) {
-            print("Player dead");
+         if (Input.GetKeyDown(KeyCode.Escape) && playerHP <= 0) {
+            SceneManager.LoadScene(0);
+          }
+         if (Input.GetKeyDown(KeyCode.KeypadEnter)) {
+            if (isPause)
+            {
+                Time.timeScale = 1;
+                isPause = false;
+            } else
+            {
+                Time.timeScale = 0;
+                isPause = true;
+            }
+        }
+        if (playerHP <= 0) {
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            if (isDead == false) {
+                zb.isChasing = false;
+                death.Play();
+                isDead = true;
+                GameOverText.text = ("GAME OVER \n press Esc to reset");
+            }
         }
     }
 
@@ -111,6 +143,7 @@ public class PlayerMovement : MonoBehaviour
         {
             movementVelocity = -speed;
             facingRight = false;
+            
             
             //transform.rotation =
             //Quaternion.LookRotation(new Vector3(-1, 0, 0));

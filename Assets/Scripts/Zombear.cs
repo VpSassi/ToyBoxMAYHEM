@@ -24,16 +24,32 @@ public class Zombear : MonoBehaviour {
 
     Rigidbody2D rbEnemy;
 
+    public float enemySpeed;
+    public Transform target;
+    public bool isChasing;
+
 	void Awake () {
         pewPew = GetComponent<PewPew>();
         sr = GetComponent<SpriteRenderer>();
         pm = GameObject.Find("Bunny").GetComponent<PlayerMovement>();
         enemyNormal = sr.sprite;
+        isChasing = true;
+        target = pm.transform;
 
 	
 	}
 
 	void Update () {
+
+        if (isChasing == true && pm.playerHP > 0)
+        {
+            float step = enemySpeed * Time.deltaTime;
+            transform.position = Vector2.MoveTowards(transform.position, target.position, step);
+         
+        }
+
+
+
 
         if (isHit == true)
         {
@@ -61,7 +77,6 @@ public class Zombear : MonoBehaviour {
         if (attack > attackCDT)
         {
             pm.playerIsHit = true;
-            print("attackHit");
             attack -= attackCDT;
             }
         else pm.playerIsHit = false;
