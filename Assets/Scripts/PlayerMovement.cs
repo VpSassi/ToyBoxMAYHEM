@@ -22,6 +22,12 @@ public class PlayerMovement : MonoBehaviour
     Zombear zb;
     public bool playerIsHit;
     public int playerHP;
+    AreaOfEffect aOER;
+    AreaOfEffect aOEL;
+    BoxCollider2D bcR;
+    BoxCollider2D bcL;
+    
+    
     //public Sprite playerHit;
     //public Sprite bunnyNormal;
     //SpriteRenderer psr;
@@ -36,7 +42,11 @@ public class PlayerMovement : MonoBehaviour
         zb = GameObject.Find("Zombear").GetComponent<Zombear>();
         //psr = GetComponent<SpriteRenderer>();
         //bunnyNormal = psr.sprite;
+        bcR = GameObject.Find("AreaOfEffectRight").GetComponent<BoxCollider2D>();
+        bcL = GameObject.Find("AreaOfEffectLeft").GetComponent<BoxCollider2D>();
         jumpingPermission = true;
+        aOER = GameObject.Find("AreaOfEffectRight").GetComponent<AreaOfEffect>();
+        aOEL = GameObject.Find("AreaOfEffectLeft").GetComponent<AreaOfEffect>();
     }
 
 
@@ -44,6 +54,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (isDashing == true) {
         dashTimer += Time.deltaTime;
+
+            aOER.enabled = false;
+            aOEL.enabled = false;
 
             if (dashTimer < dashDuration && dashDirection == true) {
                 rb.MovePosition(transform.position + Vector3.right * dashForce * Time.deltaTime);
@@ -54,6 +67,8 @@ public class PlayerMovement : MonoBehaviour
             else {
                 isDashing = false;
                 dashTimer = 0;
+                aOER.enabled = true;
+                aOEL.enabled = true;
             }
         }
 
@@ -61,9 +76,11 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C)) {
 
             dashDirection = facingRight;
+            
             if (onRope == false)
             {
                isDashing = true;
+
             }
         }
         if (playerIsHit == true) {
@@ -95,11 +112,13 @@ public class PlayerMovement : MonoBehaviour
         {
             onRope = false;
             rb.isKinematic = false;
+            aOEL.enabled = false;
+            aOER.enabled = false;
             if (grounded)
+           
             
             {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(
-                GetComponent<Rigidbody2D>().velocity.x, jump);
+                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
             }
         }
         movementVelocity = 0;
@@ -111,32 +130,40 @@ public class PlayerMovement : MonoBehaviour
         {
             movementVelocity = -speed;
             facingRight = false;
-            
-            //transform.rotation =
-            //Quaternion.LookRotation(new Vector3(-1, 0, 0));
-        }
+
+                aOEL.enabled = true;
+                aOER.enabled = false;
+                //transform.rotation =
+                //Quaternion.LookRotation(new Vector3(-1, 0, 0));
+            }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             movementVelocity = speed;
             facingRight = true;
-            //transform.rotation =
-            //Quaternion.LookRotation(new Vector3(1, 0, 0));
-        }
-        GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity,
-                                               GetComponent<Rigidbody2D>().velocity.y);
+
+               
+                aOER.enabled = true;
+                aOEL.enabled = false;
+                //transform.rotation =
+                //Quaternion.LookRotation(new Vector3(1, 0, 0));
+            }
+        GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
         grounded = false;
     }
-        if (onRope == true)
-        {
+        
+        if (onRope == true) {
+            aOEL.enabled = false;
+            aOER.enabled = false;
             //rb.isKinematic = true;
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 movementVelocity = speed;
-                
+               
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 movementVelocity = -speed;
+
             }
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, movementVelocity);
         }
@@ -151,6 +178,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.isKinematic = true;
             onRope = true;
+          
         }
 
         grounded = true;
@@ -172,6 +200,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.isKinematic = true;
             onRope = true;
+          
         }
     }
 
