@@ -27,6 +27,7 @@ public class Zombear : MonoBehaviour {
     public float enemySpeed;
     public Transform target;
     public bool isChasing;
+    Vector3 facingDirection;
 
 	void Awake () {
         pewPew = GetComponent<PewPew>();
@@ -44,8 +45,16 @@ public class Zombear : MonoBehaviour {
         if (isChasing == true && pm.playerHP > 0)
         {
             float step = enemySpeed * Time.deltaTime;
+
             transform.position = Vector2.MoveTowards(transform.position, target.position, step);
-         
+        }
+
+        facingDirection = (target.position - transform.position).normalized;
+        if ( facingDirection.x > 0) {
+            sr.flipX = true;
+        }
+        else {
+            sr.flipX = false;
         }
 
 

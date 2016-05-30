@@ -29,7 +29,7 @@ public class AreaOfEffect : MonoBehaviour
 
     void Update() {
 
-        facingRight = playerMov.facingRight;
+        //facingRight = playerMov.facingRight;
 
         if (Input.GetKey(KeyCode.X))
         {
