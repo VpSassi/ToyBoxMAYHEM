@@ -46,6 +46,12 @@ public class PlayerMovement : MonoBehaviour
     public Text GameOverText;
     bool isPause;
 
+    public Animator run;
+    public Animator dash;
+    public Animator jumpJump;
+
+    AreaOfEffect aOe;
+
 
 
     void Awake() {
@@ -84,8 +90,6 @@ public class PlayerMovement : MonoBehaviour
                 aOEL.enabled = true;
             }
         }
-
-        //dash += Time.deltaTime;
         if (Input.GetKeyDown(KeyCode.C)) {
 
             dashDirection = facingRight;
@@ -98,20 +102,6 @@ public class PlayerMovement : MonoBehaviour
         }
         if (playerIsHit == true) {
             playerHP -= zb.enemyDMG;
-
-/* 
-            GetComponent<Rigidbody2D>().velocity = new Vector2(
-                GetComponent<Rigidbody2D>().velocity.x, pHitForce);
-
-            psr.sprite = playerHit;
-            pRecovery += Time.deltaTime;
-            if(pRecovery > pRecoveryCDT) {
-                pRecovery -= pRecoveryCDT;
-                playerIsHit = false;
-                psr.sprite = bunnyNormal;
-            }
-
-*/
             }
         
          if (Input.GetKeyDown(KeyCode.Escape) && playerHP <= 0) {
@@ -148,28 +138,26 @@ public class PlayerMovement : MonoBehaviour
             aOEL.enabled = false;
             aOER.enabled = false;
             if (grounded)
-           
-            
+
             {
                 GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
+                jumpJump.Play("Jump animatio");
             }
         }
         movementVelocity = 0;
         if (onRope == false)
         {
 
-        
+
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             movementVelocity = -speed;
             facingRight = false;
             GetComponent<SpriteRenderer>().flipX = true;
-
+            run.Play("RabbitRunAnimation");
 
                 aOEL.enabled = true;
                 aOER.enabled = false;
-                //transform.rotation =
-                //Quaternion.LookRotation(new Vector3(-1, 0, 0));
             }
         if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -179,8 +167,7 @@ public class PlayerMovement : MonoBehaviour
 
                 aOER.enabled = true;
                 aOEL.enabled = false;
-                //transform.rotation =
-                //Quaternion.LookRotation(new Vector3(1, 0, 0));
+
             }
         GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
         grounded = false;
@@ -189,7 +176,6 @@ public class PlayerMovement : MonoBehaviour
         if (onRope == true) {
             aOEL.enabled = false;
             aOER.enabled = false;
-            //rb.isKinematic = true;
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 movementVelocity = speed;
@@ -207,7 +193,6 @@ public class PlayerMovement : MonoBehaviour
 
         
     }
-    //void OnTriggerEnter2D()
     void OnTriggerStay2D(Collider2D other)
     {
         if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow))
@@ -228,7 +213,6 @@ public class PlayerMovement : MonoBehaviour
             onRope = false;
         }
       
-    //    grounded = false;
     }
     void OnTriggerEnter2D(Collider2D other) {
         
@@ -240,9 +224,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
-    //Physics2D.OverlapCircle -- Katso unity scripting referencestä
-    
-
+   
 }
 

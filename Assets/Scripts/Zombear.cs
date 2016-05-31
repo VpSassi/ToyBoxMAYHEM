@@ -58,9 +58,7 @@ public class Zombear : MonoBehaviour
             float step = enemySpeed * Time.deltaTime;
 
             transform.position = Vector2.MoveTowards(transform.position, target.position, step);
-<<<<<<< HEAD
 
-=======
         }
 
         facingDirection = (target.position - transform.position).normalized;
@@ -69,7 +67,6 @@ public class Zombear : MonoBehaviour
         }
         else {
             sr.flipX = false;
->>>>>>> 2b26971f5e72d2761d4584d6c9c7f9a2126997e3
         }
 
 
@@ -114,6 +111,10 @@ public class Zombear : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D c)
     {
+        if (c.tag == "Player")
+        {
+            attacking = true;
+        }
 
         if (c.tag == "AreaOfEffectRight")
 
