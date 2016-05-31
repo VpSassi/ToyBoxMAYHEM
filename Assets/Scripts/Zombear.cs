@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Zombear : MonoBehaviour {
+public class Zombear : MonoBehaviour
+{
 
     public int HP = 3;
     PewPew pewPew;
     PlayerMovement pm;
+    AreaOfEffect areaOfEffect;
 
     public bool isHit;
+    public bool getsHit;
     public float recovery;
     public float recoveryCDT;
     public float hitForce;
@@ -21,6 +24,10 @@ public class Zombear : MonoBehaviour {
     public Sprite enemyHit;
     Sprite enemyNormal;
     SpriteRenderer sr;
+    AreaOfEffect aOER;
+    AreaOfEffect aOEL;
+    BoxCollider2D bcR;
+    BoxCollider2D bcL;
 
     Rigidbody2D rbEnemy;
 
@@ -28,24 +35,28 @@ public class Zombear : MonoBehaviour {
     public Transform target;
     public bool isChasing;
 
-	void Awake () {
+    void Awake()
+    {
         pewPew = GetComponent<PewPew>();
+        aOER = GetComponent<AreaOfEffect>();
+        aOEL = GetComponent<AreaOfEffect>();
         sr = GetComponent<SpriteRenderer>();
         pm = GameObject.Find("Bunny").GetComponent<PlayerMovement>();
         enemyNormal = sr.sprite;
         isChasing = true;
         target = pm.transform;
 
-	
-	}
 
-	void Update () {
+    }
+
+    void Update()
+    {
 
         if (isChasing == true && pm.playerHP > 0)
         {
             float step = enemySpeed * Time.deltaTime;
             transform.position = Vector2.MoveTowards(transform.position, target.position, step);
-         
+
         }
 
 
@@ -59,7 +70,8 @@ public class Zombear : MonoBehaviour {
             GetComponent<Rigidbody2D>().velocity.x, hitForce);
 
             recovery += Time.deltaTime;
-            if (recovery > recoveryCDT) {
+            if (recovery > recoveryCDT)
+            {
                 recovery -= recoveryCDT;
                 isHit = false;
                 sr.sprite = enemyNormal;
@@ -67,33 +79,79 @@ public class Zombear : MonoBehaviour {
 
         }
 
-        if (HP <= 0) {
+        if (HP <= 0)
+        {
             Destroy(gameObject);
         }
 
-        if (attacking == true) {
-
-        attack += Time.deltaTime;
-        if (attack > attackCDT)
+        if (attacking == true)
         {
-            pm.playerIsHit = true;
-            attack -= attackCDT;
+
+            attack += Time.deltaTime;
+            if (attack > attackCDT)
+            {
+                pm.playerIsHit = true;
+                attack -= attackCDT;
             }
-        else pm.playerIsHit = false;
+            else pm.playerIsHit = false;
         }
 
 
 
     }
-    void OnTriggerEnter2D(Collider2D c) {
-        if (c.tag == "Player") {
-            attacking = true;
-        }
-    }
-    void OnTriggerExit2D(Collider2D c) {
+    void OnTriggerEnter2D(Collider2D c)
+    {
 
-        if (c.tag == "Player") {
+        if (c.tag == "AreaOfEffectRight")
+
+        {
+            sr.sprite = enemyHit;
+            //rbEnemy.MovePosition(transform.position + Vector3.up * hitForce * Time.deltaTime);
+            GetComponent<Rigidbody2D>().velocity = new Vector2(
+            GetComponent<Rigidbody2D>().velocity.x, hitForce);
+
+
+        }
+
+        if (c.tag == "AreaOfEffectLeft")
+
+        {
+            sr.sprite = enemyHit;
+            //rbEnemy.MovePosition(transform.position + Vector3.up * hitForce * Time.deltaTime);
+            GetComponent<Rigidbody2D>().velocity = new Vector2(
+            GetComponent<Rigidbody2D>().velocity.x, hitForce);
+
+        }
+
+    }
+    void OnTriggerExit2D(Collider2D c)
+    {
+
+        if (c.tag == "Player")
+        {
             attacking = false;
+        }
+
+        if (c.tag == "AreaOfEffectRight")
+        {
+            recovery += Time.deltaTime;
+            if (recovery > recoveryCDT)
+            {
+                recovery -= recoveryCDT;
+                isHit = false;
+                sr.sprite = enemyNormal;
+            }
+
+            if (c.tag == "AreaOfEffectLeft")
+            {
+                recovery += Time.deltaTime;
+                if (recovery > recoveryCDT)
+                {
+                    recovery -= recoveryCDT;
+                    isHit = false;
+                    sr.sprite = enemyNormal;
+                }
+            }
         }
     }
 }
