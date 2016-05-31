@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -26,14 +28,23 @@ public class PlayerMovement : MonoBehaviour
     AreaOfEffect aOEL;
     BoxCollider2D bcR;
     BoxCollider2D bcL;
-    
-    
+
+    public object Bunny1 { get; private set; }
+
+
     //public Sprite playerHit;
     //public Sprite bunnyNormal;
     //SpriteRenderer psr;
     //public float pRecovery;
     //public float pRecoveryCDT;
     //public float pHitForce;
+
+    public AudioSource death;
+    public bool isDead;
+
+    public Text HPtext;
+    public Text GameOverText;
+    bool isPause;
 
 
 
@@ -51,6 +62,8 @@ public class PlayerMovement : MonoBehaviour
 
 
     void Update () {
+
+        HPtext.text = "HP - " + playerHP;
 
         if (isDashing == true) {
         dashTimer += Time.deltaTime;
@@ -101,8 +114,28 @@ public class PlayerMovement : MonoBehaviour
 */
             }
         
-        if (playerHP == 0) {
-            print("Player dead");
+         if (Input.GetKeyDown(KeyCode.Escape) && playerHP <= 0) {
+            SceneManager.LoadScene(0);
+          }
+         if (Input.GetKeyDown(KeyCode.KeypadEnter)) {
+            if (isPause)
+            {
+                Time.timeScale = 1;
+                isPause = false;
+            } else
+            {
+                Time.timeScale = 0;
+                isPause = true;
+            }
+        }
+        if (playerHP <= 0) {
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            if (isDead == false) {
+                zb.isChasing = false;
+                death.Play();
+                isDead = true;
+                GameOverText.text = ("GAME OVER \n press Esc to reset");
+            }
         }
     }
 
@@ -130,6 +163,8 @@ public class PlayerMovement : MonoBehaviour
         {
             movementVelocity = -speed;
             facingRight = false;
+            GetComponent<SpriteRenderer>().flipX = true;
+
 
                 aOEL.enabled = true;
                 aOER.enabled = false;
@@ -140,8 +175,8 @@ public class PlayerMovement : MonoBehaviour
         {
             movementVelocity = speed;
             facingRight = true;
+            GetComponent<SpriteRenderer>().flipX = false;
 
-               
                 aOER.enabled = true;
                 aOEL.enabled = false;
                 //transform.rotation =
@@ -167,6 +202,7 @@ public class PlayerMovement : MonoBehaviour
             }
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, movementVelocity);
         }
+
 
 
         

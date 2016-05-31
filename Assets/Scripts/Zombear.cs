@@ -34,6 +34,7 @@ public class Zombear : MonoBehaviour
     public float enemySpeed;
     public Transform target;
     public bool isChasing;
+    Vector3 facingDirection;
 
     void Awake()
     {
@@ -55,8 +56,20 @@ public class Zombear : MonoBehaviour
         if (isChasing == true && pm.playerHP > 0)
         {
             float step = enemySpeed * Time.deltaTime;
-            transform.position = Vector2.MoveTowards(transform.position, target.position, step);
 
+            transform.position = Vector2.MoveTowards(transform.position, target.position, step);
+<<<<<<< HEAD
+
+=======
+        }
+
+        facingDirection = (target.position - transform.position).normalized;
+        if ( facingDirection.x > 0) {
+            sr.flipX = true;
+        }
+        else {
+            sr.flipX = false;
+>>>>>>> 2b26971f5e72d2761d4584d6c9c7f9a2126997e3
         }
 
 
