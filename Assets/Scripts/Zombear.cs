@@ -36,6 +36,8 @@ public class Zombear : MonoBehaviour
     public bool isChasing;
     Vector3 facingDirection;
 
+    public Animator zombear;
+
     void Awake()
     {
         pewPew = GetComponent<PewPew>();
@@ -58,6 +60,8 @@ public class Zombear : MonoBehaviour
             float step = enemySpeed * Time.deltaTime;
 
             transform.position = Vector2.MoveTowards(transform.position, target.position, step);
+
+            //zombear.Play("");
 
         }
 
