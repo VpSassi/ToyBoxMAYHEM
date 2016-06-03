@@ -141,6 +141,11 @@ public class Zombear : MonoBehaviour
 
         }
 
+        if (HP <= 0)
+        {
+           Destroy(gameObject);
+        }
+
     }
     void OnTriggerExit2D(Collider2D c)
     {

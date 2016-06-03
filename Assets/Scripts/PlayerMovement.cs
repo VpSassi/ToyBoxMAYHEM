@@ -151,7 +151,11 @@ public class PlayerMovement : MonoBehaviour
 
             {
                 GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
+
+                jumpJump.Play("Jump animatio");
+
                 run.Play("Jump animatio");
+
             }
         }
         movementVelocity = 0;
@@ -164,6 +168,7 @@ public class PlayerMovement : MonoBehaviour
             facingRight = false;
             GetComponent<SpriteRenderer>().flipX = true;
 
+               run.Play("RabbitRunAnimation");
 
                 aOEL.enabled = true;
                 aOER.enabled = false;
