@@ -84,8 +84,5 @@ public class PewPew : MonoBehaviour {
             playerMov.walkingPermission = true;
 
         }
-
-
-
     }
 }

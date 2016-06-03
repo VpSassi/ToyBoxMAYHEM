@@ -27,8 +27,6 @@ public class PlayerMovement : MonoBehaviour
     Zombear zb;
     public bool playerIsHit;
     public int playerHP;
-    public BoxCollider2D aOER;
-    public BoxCollider2D aOEL;
     //public BoxCollider2D bcR;
     //public BoxCollider2D bcL;
 
@@ -51,8 +49,6 @@ public class PlayerMovement : MonoBehaviour
 
     public Animator run;
 
-    AreaOfEffect aOe;
-
     void Awake() {
         rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
         zb = GameObject.Find("Zombear").GetComponent<Zombear>();
@@ -74,8 +70,7 @@ public class PlayerMovement : MonoBehaviour
         if (isDashing == true && dashCD < 0) {
         dashTimer += Time.deltaTime;
 
-            aOER.enabled = false;
-            aOEL.enabled = false;
+           
 
             if (dashTimer < dashDuration && dashDirection == true) {
                 rb.MovePosition(transform.position + Vector3.right * dashForce * Time.deltaTime);
@@ -94,8 +89,7 @@ public class PlayerMovement : MonoBehaviour
             else {
                 isDashing = false;
                 dashTimer = 0;
-                aOER.enabled = true;
-                aOEL.enabled = true;
+            
                 dashCD = dashCDTime;
             }
         } else {
@@ -145,14 +139,12 @@ public class PlayerMovement : MonoBehaviour
         {
             onRope = false;
             rb.isKinematic = false;
-            aOEL.enabled = false;
-            aOER.enabled = false;
             if (grounded)
 
             {
                 GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
 
-                run.Play("Jump animatio");
+              //  run.Play("Jump animatio");
 
             }
         }
@@ -166,13 +158,11 @@ public class PlayerMovement : MonoBehaviour
             facingRight = false;
             GetComponent<SpriteRenderer>().flipX = true;
 
-               run.Play("RabbitRunAnimation");
+             //  run.Play("RabbitRunAnimation");
 
-                aOEL.enabled = true;
-                aOER.enabled = false;
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow) && onRope == false && walkingPermission == true) {
-            run.Play("RabbitRunAnimation");
+           // run.Play("RabbitRunAnimation");
             }
                 if (Input.GetKey(KeyCode.RightArrow) && onRope == false && walkingPermission == true)
         {
@@ -180,20 +170,16 @@ public class PlayerMovement : MonoBehaviour
             facingRight = true;
             GetComponent<SpriteRenderer>().flipX = false;
 
-                aOER.enabled = true;
-                aOEL.enabled = false;
-
             }
             if (Input.GetKeyDown(KeyCode.RightArrow) && onRope == false && walkingPermission == true) {
-            run.Play("RabbitRunAnimation");
+           // run.Play("RabbitRunAnimation");
             }
                 GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
         grounded = false;
     }
         
         if (onRope == true) {
-            aOEL.enabled = false;
-            aOER.enabled = false;
+ 
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 movementVelocity = speed;
@@ -206,8 +192,6 @@ public class PlayerMovement : MonoBehaviour
             }
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, movementVelocity);
         }
-
-
 
         
     }

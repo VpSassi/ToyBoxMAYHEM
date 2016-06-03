@@ -4,28 +4,21 @@ using System.Collections.Generic;
 
 public class AreaOfEffect : MonoBehaviour
 {
-    public List<GameObject> EnemiesInCollider;
-    public float distance = 100;
     public int aoeGunDamage = 2;
-    public PlayerMovement playerMov2;
+    PlayerMovement playerMov2;
+    public float horizontalRange;
+    public float verticalRange;
     public float cooldown;
     float timeSinceLastShot;
-    public Rigidbody2D rB;
-    public LayerMask mask;
+    Rigidbody2D rB;
+    public LayerMask enemyMask;
     public Animator penetrator;
-    public BoxCollider2D aOER;
-    public BoxCollider2D aOEL;
-
-
-    void OnTriggerEnter2D(Collider2D c)
+    
+    void Awake()
     {
-
-        if (c.gameObject.tag == "Enemy")
-        {
-            EnemiesInCollider.Add(c.gameObject);
-        }
+        playerMov2 = GetComponent<PlayerMovement>();
+        rB = GetComponent<Rigidbody2D>();
     }
-
     void Update()
     {
 
@@ -37,60 +30,53 @@ public class AreaOfEffect : MonoBehaviour
             rB.freezeRotation = true;
             playerMov2.jumpingPermission = false;
 
-           
             if (timeSinceLastShot > cooldown) // shoot!
             {
                 //penetrator.Play("PenetratorAnimator");
                 timeSinceLastShot = 0;
 
-
-
-                if ((facingRight == true && (transform.position.x >= playerMov2.transform.position.x))
-                    && playerMov2.onRope == false)
+                if (playerMov2.onRope == false)
                 {
-                    print("damage right");
-                  //  aOER.enabled = true;
-                    for (int i = 0; i < EnemiesInCollider.Count; i++)
+                    var pos = transform.position;
+                    if (facingRight == true)
                     {
-                        print(i);
-                        EnemiesInCollider[i].GetComponent<Zombear>().HP -= aoeGunDamage;
+                        Vector2 upperLeft = new Vector2(pos.x, pos.y + verticalRange / 2);
+                        Vector2 lowerRight = new Vector2(pos.x + horizontalRange, pos.y - verticalRange / 2);
 
-                    }
+                        var Enemies = Physics2D.OverlapAreaAll(upperLeft, lowerRight, enemyMask);
 
-                    
-                }
-
-                if ((facingRight == false /*&& (transform.position.x <= playerMov2.transform.position.x)*/)
-                 && playerMov2.onRope == false)
-                {
-                    print("damage left");
-                  //  aOEL.enabled = true;
-                    for (int i = 0; i < EnemiesInCollider.Count; i++)
-
+                        //TODO vihollisille interface
+                        //hit.collider.GetComponent<Zombear>().isHit = true;
+                        //hit.collider.GetComponent<Zombear>().HP -= gunDamage;
+                        foreach (Collider2D c in Enemies) {
+                            c.GetComponent<Zombear>().isHit = true;
+                            c.GetComponent<Zombear>().HP -= aoeGunDamage;
+                        }
+                    } else if (facingRight == false)
                     {
-                        print(i);
-                        if (EnemiesInCollider[i] != null) 
-                            EnemiesInCollider[i].GetComponent<Zombear>().HP -= aoeGunDamage;
+                        Vector2 upperLeft = new Vector2(pos.x - horizontalRange, pos.y + verticalRange / 2);
+                        Vector2 lowerRight = new Vector2(pos.x, pos.y - verticalRange / 2);
 
+                        var Enemies = Physics2D.OverlapAreaAll(upperLeft, lowerRight, enemyMask);
+
+                        //TODO vihollisille interface
+                        //hit.collider.GetComponent<Zombear>().isHit = true;
+                        //hit.collider.GetComponent<Zombear>().HP -= gunDamage;
+                        foreach (Collider2D c in Enemies) {
+                            c.GetComponent<Zombear>().isHit = true;
+                            c.GetComponent<Zombear>().HP -= aoeGunDamage;
+                        }
                     }
-
                 }
                 else {
                     rB.freezeRotation = true;
                     playerMov2.jumpingPermission = true;
-
                 }
             }
-        } else {
-          //  aOEL.enabled = false;
-         //   aOER.enabled = false;
+        }
+        else {
+            //  aOEL.enabled = false;
+            //   aOER.enabled = false;
         }
     }
-
-    void OnTriggerExit2D(Collider2D c) {
-        if (c.gameObject.tag == "Enemy") 
-      {
-            EnemiesInCollider.Remove(c.gameObject);
-       }
-    } 
 }
