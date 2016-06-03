@@ -14,12 +14,15 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D  rb;
     public bool onRope = false;
     public bool jumpingPermission;
+    public bool walkingPermission;
 
     public float dashForce;
     public float dashTimer;
     bool isDashing;
     public float dashDuration;
     bool dashDirection;
+    public float dashCDTime;
+    float dashCD;
 
     Zombear zb;
     public bool playerIsHit;
@@ -47,8 +50,6 @@ public class PlayerMovement : MonoBehaviour
     bool isPause;
 
     public Animator run;
-    public Animator dash;
-    public Animator jumpJump;
 
     AreaOfEffect aOe;
 
@@ -71,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
         HPtext.text = "HP - " + playerHP;
 
-        if (isDashing == true) {
+        if (isDashing == true && dashCD < 0) {
         dashTimer += Time.deltaTime;
 
             aOER.enabled = false;
@@ -79,16 +80,27 @@ public class PlayerMovement : MonoBehaviour
 
             if (dashTimer < dashDuration && dashDirection == true) {
                 rb.MovePosition(transform.position + Vector3.right * dashForce * Time.deltaTime);
+                GetComponent<SpriteRenderer>().flipX = false;
+                walkingPermission = false;
+                jumpingPermission = false;
+                run.Play("Dash animation");
             }
             else if(dashTimer < dashDuration && dashDirection == false) {
                 rb.MovePosition(transform.position + Vector3.left * dashForce * Time.deltaTime);
+                GetComponent<SpriteRenderer>().flipX = true;
+                walkingPermission = false;
+                jumpingPermission = false;
+                run.Play("Dash animation");
             }
             else {
                 isDashing = false;
                 dashTimer = 0;
                 aOER.enabled = true;
                 aOEL.enabled = true;
+                dashCD = dashCDTime;
             }
+        } else {
+            dashCD -= Time.deltaTime;
         }
         if (Input.GetKeyDown(KeyCode.C)) {
 
@@ -97,7 +109,6 @@ public class PlayerMovement : MonoBehaviour
             if (onRope == false)
             {
                isDashing = true;
-
             }
         }
         if (playerIsHit == true) {
@@ -141,7 +152,11 @@ public class PlayerMovement : MonoBehaviour
 
             {
                 GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
+<<<<<<< HEAD
                 //jumpJump.Play("Jump animatio");
+=======
+                run.Play("Jump animatio");
+>>>>>>> 34716b61b7b4ded0a11ff735a0f7b3d09f9b2f24
             }
         }
         movementVelocity = 0;
@@ -149,7 +164,7 @@ public class PlayerMovement : MonoBehaviour
         {
 
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) && onRope == false && walkingPermission == true && dashTimer < 0)
         {
             movementVelocity = -speed;
             facingRight = false;
@@ -159,11 +174,12 @@ public class PlayerMovement : MonoBehaviour
                 aOEL.enabled = true;
                 aOER.enabled = false;
             }
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) && onRope == false && walkingPermission == true && dashTimer < 0)
         {
             movementVelocity = speed;
             facingRight = true;
             GetComponent<SpriteRenderer>().flipX = false;
+            run.Play("RabbitRunAnimation");
 
                 aOER.enabled = true;
                 aOEL.enabled = false;

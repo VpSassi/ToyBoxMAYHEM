@@ -15,7 +15,9 @@ public class PewPew : MonoBehaviour {
     public float pushForce;
 
     public AudioSource shoot;
-    public AudioSource hitEnemy; 
+    public AudioSource hitEnemy;
+
+    public Animator run; 
 
     void Awake() {
         playerMov = GetComponent<PlayerMovement>();
@@ -28,15 +30,21 @@ public class PewPew : MonoBehaviour {
         facingRight = playerMov.facingRight;
 
         if (Input.GetKey(KeyCode.Z)) {
+        
+        if (playerMov.grounded == true) {
 
             rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+            }
+
             rb.freezeRotation = true;
             playerMov.jumpingPermission = false;
+            playerMov.walkingPermission = false;
 
         timeSinceLastCDT += Time.deltaTime;
         if (timeSinceLastCDT > CDT) {
             timeSinceLastCDT -= CDT;
             shoot.Play();
+            run.Play("Shoot animation");
 
             if (facingRight == true && playerMov.onRope == false) {
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, 14, mask.value);
@@ -73,6 +81,7 @@ public class PewPew : MonoBehaviour {
         } else {
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             playerMov.jumpingPermission = true;
+            playerMov.walkingPermission = true;
 
         }
 
