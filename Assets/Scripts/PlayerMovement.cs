@@ -27,12 +27,12 @@ public class PlayerMovement : MonoBehaviour
     Zombear zb;
     public bool playerIsHit;
     public int playerHP;
-    AreaOfEffect aOER;
-    AreaOfEffect aOEL;
-    BoxCollider2D bcR;
-    BoxCollider2D bcL;
+    public BoxCollider2D aOER;
+    public BoxCollider2D aOEL;
+    //public BoxCollider2D bcR;
+    //public BoxCollider2D bcL;
 
-    public object Bunny1 { get; private set; }
+    //public object Bunny1 { get; private set; }
 
 
     //public Sprite playerHit;
@@ -53,18 +53,17 @@ public class PlayerMovement : MonoBehaviour
 
     AreaOfEffect aOe;
 
-
-
     void Awake() {
         rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
         zb = GameObject.Find("Zombear").GetComponent<Zombear>();
         //psr = GetComponent<SpriteRenderer>();
         //bunnyNormal = psr.sprite;
-        bcR = GameObject.Find("AreaOfEffectRight").GetComponent<BoxCollider2D>();
-        bcL = GameObject.Find("AreaOfEffectLeft").GetComponent<BoxCollider2D>();
+        //bcR = GameObject.Find("AreaOfEffectRight").GetComponent<BoxCollider2D>();
+        //bcL = GameObject.Find("AreaOfEffectLeft").GetComponent<BoxCollider2D>();
         jumpingPermission = true;
-        aOER = GameObject.Find("AreaOfEffectRight").GetComponent<AreaOfEffect>();
-        aOEL = GameObject.Find("AreaOfEffectLeft").GetComponent<AreaOfEffect>();
+        //aOER = GameObject.Find("AreaOfEffectRight").GetComponent<AreaOfEffect>();
+        //aOEL = GameObject.Find("AreaOfEffectLeft").GetComponent<AreaOfEffect>();
+
     }
 
 
@@ -159,29 +158,33 @@ public class PlayerMovement : MonoBehaviour
         if (onRope == false)
         {
 
-
-        if (Input.GetKey(KeyCode.LeftArrow) && onRope == false && walkingPermission == true && dashTimer < 0)
+        if (Input.GetKey(KeyCode.LeftArrow) && onRope == false && walkingPermission == true)
         {
             movementVelocity = -speed;
             facingRight = false;
             GetComponent<SpriteRenderer>().flipX = true;
-            run.Play("RabbitRunAnimation");
+
 
                 aOEL.enabled = true;
                 aOER.enabled = false;
             }
-        if (Input.GetKey(KeyCode.RightArrow) && onRope == false && walkingPermission == true && dashTimer < 0)
+            if (Input.GetKeyDown(KeyCode.LeftArrow) && onRope == false && walkingPermission == true) {
+            run.Play("RabbitRunAnimation");
+            }
+                if (Input.GetKey(KeyCode.RightArrow) && onRope == false && walkingPermission == true)
         {
             movementVelocity = speed;
             facingRight = true;
             GetComponent<SpriteRenderer>().flipX = false;
-            run.Play("RabbitRunAnimation");
 
                 aOER.enabled = true;
                 aOEL.enabled = false;
 
             }
-        GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
+            if (Input.GetKeyDown(KeyCode.RightArrow) && onRope == false && walkingPermission == true) {
+            run.Play("RabbitRunAnimation");
+            }
+                GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
         grounded = false;
     }
         
