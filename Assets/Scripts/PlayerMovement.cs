@@ -152,8 +152,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
 
-                jumpJump.Play("Jump animatio");
-
                 run.Play("Jump animatio");
 
             }
