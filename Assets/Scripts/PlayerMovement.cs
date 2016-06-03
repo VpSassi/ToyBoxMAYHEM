@@ -3,15 +3,14 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class PlayerMovement : MonoBehaviour
-{
+public class PlayerMovement : MonoBehaviour {
 
     public float speed;
     public float jump;
     float movementVelocity;
     public bool grounded = false;
     public bool facingRight = true;
-    Rigidbody2D  rb;
+    Rigidbody2D rb;
     public bool onRope = false;
     public bool jumpingPermission;
     public bool walkingPermission;
@@ -59,16 +58,15 @@ public class PlayerMovement : MonoBehaviour
         jumpingPermission = true;
         //aOER = GameObject.Find("AreaOfEffectRight").GetComponent<AreaOfEffect>();
         //aOEL = GameObject.Find("AreaOfEffectLeft").GetComponent<AreaOfEffect>();
-
     }
 
 
-    void Update () {
+    void Update() {
 
         HPtext.text = "HP - " + playerHP;
 
         if (isDashing == true && dashCD < 0) {
-        dashTimer += Time.deltaTime;
+            dashTimer += Time.deltaTime;
 
            
 
@@ -79,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
                 jumpingPermission = false;
                 run.Play("Dash animation");
             }
-            else if(dashTimer < dashDuration && dashDirection == false) {
+            else if (dashTimer < dashDuration && dashDirection == false) {
                 rb.MovePosition(transform.position + Vector3.left * dashForce * Time.deltaTime);
                 GetComponent<SpriteRenderer>().flipX = true;
                 walkingPermission = false;
@@ -92,32 +90,31 @@ public class PlayerMovement : MonoBehaviour
             
                 dashCD = dashCDTime;
             }
-        } else {
+        }
+        else {
             dashCD -= Time.deltaTime;
         }
         if (Input.GetKeyDown(KeyCode.C)) {
+			
+			dashDirection = facingRight;
 
-            dashDirection = facingRight;
-            
-            if (onRope == false)
-            {
-               isDashing = true;
+            if (onRope == false && dashCD < 0) {
+                isDashing = true;
             }
         }
         if (playerIsHit == true) {
             playerHP -= zb.enemyDMG;
-            }
-        
-         if (Input.GetKeyDown(KeyCode.Escape) && playerHP <= 0) {
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && playerHP <= 0) {
             SceneManager.LoadScene(0);
-          }
-         if (Input.GetKeyDown(KeyCode.KeypadEnter)) {
-            if (isPause)
-            {
+        }
+        if (Input.GetKeyDown(KeyCode.KeypadEnter)) {
+            if (isPause) {
                 Time.timeScale = 1;
                 isPause = false;
-            } else
-            {
+            }
+            else {
                 Time.timeScale = 0;
                 isPause = true;
             }
@@ -131,6 +128,7 @@ public class PlayerMovement : MonoBehaviour
                 GameOverText.text = ("GAME OVER \n press Esc to reset");
             }
         }
+<<<<<<< HEAD
     }
 
     void FixedUpdate()
@@ -159,26 +157,50 @@ public class PlayerMovement : MonoBehaviour
             GetComponent<SpriteRenderer>().flipX = true;
 
              //  run.Play("RabbitRunAnimation");
+=======
+        if (onRope == false) {
+            movementVelocity = 0;
+            if (Input.GetKey(KeyCode.LeftArrow) && onRope == false && walkingPermission == true) {
+                movementVelocity -= speed;
+                facingRight = false;
+                GetComponent<SpriteRenderer>().flipX = true;
+                //run.Play("RabbitRunAnimation");
+>>>>>>> 374713b03d8751702654436cc911f037bc511406
 
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow) && onRope == false && walkingPermission == true) {
+<<<<<<< HEAD
            // run.Play("RabbitRunAnimation");
+=======
+                run.Play("RabbitRunAnimation");
+>>>>>>> 374713b03d8751702654436cc911f037bc511406
             }
-                if (Input.GetKey(KeyCode.RightArrow) && onRope == false && walkingPermission == true)
-        {
-            movementVelocity = speed;
-            facingRight = true;
-            GetComponent<SpriteRenderer>().flipX = false;
+            if (Input.GetKey(KeyCode.RightArrow) && onRope == false && walkingPermission == true) {
+                movementVelocity += speed;
+                facingRight = true;
+                GetComponent<SpriteRenderer>().flipX = false;
+                //run.Play("RabbitRunAnimation");
 
             }
             if (Input.GetKeyDown(KeyCode.RightArrow) && onRope == false && walkingPermission == true) {
+<<<<<<< HEAD
            // run.Play("RabbitRunAnimation");
+=======
+                run.Play("RabbitRunAnimation");
+>>>>>>> 374713b03d8751702654436cc911f037bc511406
             }
-                GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
-        grounded = false;
-    }
-        
+            GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
+			
+			// if both buttons are pressed, idle animation starts playing & player stops moving
+			if ((Input.GetKeyDown(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow)) || (Input.GetKeyDown(KeyCode.RightArrow) && Input.GetKey(KeyCode.LeftArrow))) {
+				run.Play("Idle");
+			} 
+
+
+        }
+
         if (onRope == true) {
+<<<<<<< HEAD
  
             if (Input.GetKey(KeyCode.UpArrow))
             {
@@ -188,44 +210,71 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 movementVelocity = -speed;
+=======
+            aOEL.enabled = false;
+            aOER.enabled = false;
+>>>>>>> 374713b03d8751702654436cc911f037bc511406
 
-            }
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, movementVelocity);
         }
+        if (Input.GetKeyDown(KeyCode.Space) && jumpingPermission == true) {
 
+<<<<<<< HEAD
         
+=======
+            onRope = false;
+            rb.isKinematic = false;
+            aOEL.enabled = false;
+            aOER.enabled = false;
+            if (grounded) {
+                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
+			    print("jump");
+                run.Play("Jump animatio");
+            }
+        }
+        if (Input.GetKey(KeyCode.UpArrow)) {
+            movementVelocity = speed;
+
+        }
+        if (Input.GetKey(KeyCode.DownArrow)) {
+            movementVelocity = -speed;
+        }
+		if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) && !Input.anyKey) {
+			run.Play("Idle");
+		}
+		if (Input.GetKeyUp(KeyCode.Z)) {
+			run.Play("Idle");
+		}
+
+>>>>>>> 374713b03d8751702654436cc911f037bc511406
     }
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow))
-        {
+
+    void OnTriggerStay2D(Collider2D other) {
+        if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow)) {
             rb.isKinematic = true;
             onRope = true;
-          
+
         }
 
         grounded = true;
     }
 
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.tag == ("Rope"))
-        {
+    void OnTriggerExit2D(Collider2D other) {
+        if (other.tag == ("Rope")) {
             rb.isKinematic = false;
             onRope = false;
         }
-      
+
     }
     void OnTriggerEnter2D(Collider2D other) {
-        
-        if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow))
-        {
+
+        if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow)) {
             rb.isKinematic = true;
             onRope = true;
-          
+
         }
     }
 
-   
+
 }
 

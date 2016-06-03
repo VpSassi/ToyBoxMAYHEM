@@ -29,10 +29,13 @@ public class PewPew : MonoBehaviour {
 	void Update() {
         facingRight = playerMov.facingRight;
 
-        if (Input.GetKey(KeyCode.Z)) {
+		if (Input.GetKeyDown(KeyCode.Z)) {
+			run.Play("Shoot animation");
+		}
+
+		if (Input.GetKey(KeyCode.Z)) {
         
         if (playerMov.grounded == true) {
-
             rb.constraints = RigidbodyConstraints2D.FreezePositionX;
             }
 
@@ -44,9 +47,10 @@ public class PewPew : MonoBehaviour {
         if (timeSinceLastCDT > CDT) {
             timeSinceLastCDT -= CDT;
             shoot.Play();
-            run.Play("Shoot animation");
+			
 
-            if (facingRight == true && playerMov.onRope == false) {
+
+				if (facingRight == true && playerMov.onRope == false) {
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, 14, mask.value);
                     if (hit.collider != null)
                     {
