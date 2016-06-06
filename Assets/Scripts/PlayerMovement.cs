@@ -5,276 +5,221 @@ using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour {
 
-    public float speed;
-    public float jump;
-    float movementVelocity;
-    public bool grounded = false;
-    public bool facingRight = true;
-    Rigidbody2D rb;
-    public bool onRope = false;
-    public bool jumpingPermission;
-    public bool walkingPermission;
+	public float speed;
+	public float jump;
+	float movementVelocity;
+	public bool grounded = false;
+	public bool facingRight = true;
+	Rigidbody2D rb;
+	public bool onRope = false;
+	public bool jumpingPermission;
+	public bool walkingPermission;
 
-    public float dashForce;
-    public float dashTimer;
-    bool isDashing;
-    public float dashDuration;
-    bool dashDirection;
-    public float dashCDTime;
-    float dashCD;
+	public float dashForce;
+	public float dashTimer;
+	bool isDashing;
+	public float dashDuration;
+	bool dashDirection;
+	public float dashCDTime;
+	float dashCD;
 
-    Zombear zb;
-    public bool playerIsHit;
-    public int playerHP;
-    //public BoxCollider2D bcR;
-    //public BoxCollider2D bcL;
+	Zombear zb;
+	public bool playerIsHit;
+	public int playerHP;
+	//public BoxCollider2D bcR;
+	//public BoxCollider2D bcL;
 
-    //public object Bunny1 { get; private set; }
-
-
-    //public Sprite playerHit;
-    //public Sprite bunnyNormal;
-    //SpriteRenderer psr;
-    //public float pRecovery;
-    //public float pRecoveryCDT;
-    //public float pHitForce;
-
-    public AudioSource death;
-    public bool isDead;
-
-    public Text HPtext;
-    public Text GameOverText;
-    bool isPause;
-
-    public Animator run;
-
-    void Awake() {
-        rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
-        zb = GameObject.Find("Zombear").GetComponent<Zombear>();
-        //psr = GetComponent<SpriteRenderer>();
-        //bunnyNormal = psr.sprite;
-        //bcR = GameObject.Find("AreaOfEffectRight").GetComponent<BoxCollider2D>();
-        //bcL = GameObject.Find("AreaOfEffectLeft").GetComponent<BoxCollider2D>();
-        jumpingPermission = true;
-        //aOER = GameObject.Find("AreaOfEffectRight").GetComponent<AreaOfEffect>();
-        //aOEL = GameObject.Find("AreaOfEffectLeft").GetComponent<AreaOfEffect>();
-    }
+	//public object Bunny1 { get; private set; }
 
 
-    void Update() {
+	//public Sprite playerHit;
+	//public Sprite bunnyNormal;
+	//SpriteRenderer psr;
+	//public float pRecovery;
+	//public float pRecoveryCDT;
+	//public float pHitForce;
 
-        HPtext.text = "HP - " + playerHP;
+	public AudioSource death;
+	public bool isDead;
 
-        if (isDashing == true && dashCD < 0) {
-            dashTimer += Time.deltaTime;
+	public Text HPtext;
+	public Text GameOverText;
+	bool isPause;
 
-           
 
-            if (dashTimer < dashDuration && dashDirection == true) {
-                rb.MovePosition(transform.position + Vector3.right * dashForce * Time.deltaTime);
-                GetComponent<SpriteRenderer>().flipX = false;
-                walkingPermission = false;
-                jumpingPermission = false;
-                run.Play("Dash animation");
-            }
-            else if (dashTimer < dashDuration && dashDirection == false) {
-                rb.MovePosition(transform.position + Vector3.left * dashForce * Time.deltaTime);
-                GetComponent<SpriteRenderer>().flipX = true;
-                walkingPermission = false;
-                jumpingPermission = false;
-                run.Play("Dash animation");
-            }
-            else {
-                isDashing = false;
-                dashTimer = 0;
-            
-                dashCD = dashCDTime;
-            }
-        }
-        else {
-            dashCD -= Time.deltaTime;
-        }
-        if (Input.GetKeyDown(KeyCode.C)) {
-			
+	void Awake() {
+		rb = GameObject.Find("Bunny").GetComponent<Rigidbody2D>();
+		zb = GameObject.Find("Zombear").GetComponent<Zombear>();
+		//psr = GetComponent<SpriteRenderer>();
+		//bunnyNormal = psr.sprite;
+		//bcR = GameObject.Find("AreaOfEffectRight").GetComponent<BoxCollider2D>();
+		//bcL = GameObject.Find("AreaOfEffectLeft").GetComponent<BoxCollider2D>();
+		jumpingPermission = true;
+		//aOER = GameObject.Find("AreaOfEffectRight").GetComponent<AreaOfEffect>();
+		//aOEL = GameObject.Find("AreaOfEffectLeft").GetComponent<AreaOfEffect>();
+	}
+
+
+
+	void Update() {
+
+
+
+
+		HPtext.text = "HP - " + playerHP;
+
+		if (isDashing == true && dashCD < 0) {
+			dashTimer += Time.deltaTime;
+
+
+
+			if (dashTimer < dashDuration && dashDirection == true) {
+				rb.MovePosition(transform.position + Vector3.right * dashForce * Time.deltaTime);
+				GetComponent<SpriteRenderer>().flipX = false;
+				walkingPermission = false;
+				jumpingPermission = false;
+			}
+			else if (dashTimer < dashDuration && dashDirection == false) {
+				rb.MovePosition(transform.position + Vector3.left * dashForce * Time.deltaTime);
+				GetComponent<SpriteRenderer>().flipX = true;
+				walkingPermission = false;
+				jumpingPermission = false;
+			}
+			else {
+				isDashing = false;
+				dashTimer = 0;
+
+				dashCD = dashCDTime;
+			}
+		}
+		else {
+			dashCD -= Time.deltaTime;
+		}
+		if (Input.GetKeyDown(KeyCode.C)) {
+
 			dashDirection = facingRight;
 
-            if (onRope == false && dashCD < 0) {
-                isDashing = true;
-            }
-        }
-        if (playerIsHit == true) {
-            playerHP -= zb.enemyDMG;
-        }
+			if (onRope == false && dashCD < 0) {
+				isDashing = true;
+			}
+		}
+		if (playerIsHit == true) {
+			playerHP -= zb.enemyDMG;
+		}
 
-        if (Input.GetKeyDown(KeyCode.Escape) && playerHP <= 0) {
-            SceneManager.LoadScene(0);
-        }
-        if (Input.GetKeyDown(KeyCode.KeypadEnter)) {
-            if (isPause) {
-                Time.timeScale = 1;
-                isPause = false;
-            }
-            else {
-                Time.timeScale = 0;
-                isPause = true;
-            }
-        }
-        if (playerHP <= 0) {
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
-            if (isDead == false) {
-                zb.isChasing = false;
-                death.Play();
-                isDead = true;
-                GameOverText.text = ("GAME OVER \n press Esc to reset");
-            }
-        }
-<<<<<<< HEAD
-    }
+		if (Input.GetKeyDown(KeyCode.Escape) && playerHP <= 0) {
+			SceneManager.LoadScene(0);
+		}
+		if (Input.GetKeyDown(KeyCode.KeypadEnter)) {
+			if (isPause) {
+				Time.timeScale = 1;
+				isPause = false;
+			}
+			else {
+				Time.timeScale = 0;
+				isPause = true;
+			}
+		}
+		if (playerHP <= 0) {
+			rb.constraints = RigidbodyConstraints2D.FreezeAll;
+			if (isDead == false) {
+				zb.isChasing = false;
+				death.Play();
+				isDead = true;
+				GameOverText.text = ("GAME OVER \n press Esc to reset");
+			}
+		}
 
-    void FixedUpdate()
-    {
-        if (Input.GetKey(KeyCode.Space) && jumpingPermission == true)
-        {
-            onRope = false;
-            rb.isKinematic = false;
-            if (grounded)
+	}
 
-            {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
+	void FixedUpdate() {
+		if (Input.GetKey(KeyCode.Space) && jumpingPermission == true) {
+			onRope = false;
+			rb.isKinematic = false;
+			if (grounded) {
+				GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
 
-              //  run.Play("Jump animatio");
+				//  run.Play("Jump animatio");
 
-            }
-        }
-        movementVelocity = 0;
-        if (onRope == false)
-        {
+			}
+		}
+		movementVelocity = 0;
+		if (onRope == false) {
 
-        if (Input.GetKey(KeyCode.LeftArrow) && onRope == false && walkingPermission == true)
-        {
-            movementVelocity = -speed;
-            facingRight = false;
-            GetComponent<SpriteRenderer>().flipX = true;
+			if (Input.GetKey(KeyCode.LeftArrow) && walkingPermission == true) {
+				movementVelocity = -speed;
+				facingRight = false;
+				GetComponent<SpriteRenderer>().flipX = true;
 
-             //  run.Play("RabbitRunAnimation");
-=======
-        if (onRope == false) {
-            movementVelocity = 0;
-            if (Input.GetKey(KeyCode.LeftArrow) && onRope == false && walkingPermission == true) {
-                movementVelocity -= speed;
-                facingRight = false;
-                GetComponent<SpriteRenderer>().flipX = true;
-                //run.Play("RabbitRunAnimation");
->>>>>>> 374713b03d8751702654436cc911f037bc511406
+			}
+			if (Input.GetKey(KeyCode.RightArrow) && walkingPermission == true) {
+				movementVelocity = speed;
+				facingRight = true;
+				GetComponent<SpriteRenderer>().flipX = false;
+			}
+			GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
 
-            }
-            if (Input.GetKeyDown(KeyCode.LeftArrow) && onRope == false && walkingPermission == true) {
-<<<<<<< HEAD
-           // run.Play("RabbitRunAnimation");
-=======
-                run.Play("RabbitRunAnimation");
->>>>>>> 374713b03d8751702654436cc911f037bc511406
-            }
-            if (Input.GetKey(KeyCode.RightArrow) && onRope == false && walkingPermission == true) {
-                movementVelocity += speed;
-                facingRight = true;
-                GetComponent<SpriteRenderer>().flipX = false;
-                //run.Play("RabbitRunAnimation");
-
-            }
-            if (Input.GetKeyDown(KeyCode.RightArrow) && onRope == false && walkingPermission == true) {
-<<<<<<< HEAD
-           // run.Play("RabbitRunAnimation");
-=======
-                run.Play("RabbitRunAnimation");
->>>>>>> 374713b03d8751702654436cc911f037bc511406
-            }
-            GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
-			
 			// if both buttons are pressed, idle animation starts playing & player stops moving
-			if ((Input.GetKeyDown(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow)) || (Input.GetKeyDown(KeyCode.RightArrow) && Input.GetKey(KeyCode.LeftArrow))) {
-				run.Play("Idle");
-			} 
+			//if ((Input.GetKeyDown(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow)) || (Input.GetKeyDown(KeyCode.RightArrow) && Input.GetKey(KeyCode.LeftArrow))) {
+			//	run.Play("Idle");
+			//}
+				if (Input.GetKeyDown(KeyCode.Space) && jumpingPermission == true) {
 
+					onRope = false;
+					rb.isKinematic = false;
+					//aOEL.enabled = false;
+					//aOER.enabled = false;
+					if (grounded) {
+						GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
+					}
+				}
+		
+		   
+				
+			}
 
-        }
+			if (onRope == true) {
+                movementVelocity = 0;
+				if (Input.GetKey(KeyCode.UpArrow)) {
+					movementVelocity = speed;
 
-        if (onRope == true) {
-<<<<<<< HEAD
- 
-            if (Input.GetKey(KeyCode.UpArrow))
-            {
-                movementVelocity = speed;
-               
-            }
-            if (Input.GetKey(KeyCode.DownArrow))
-            {
-                movementVelocity = -speed;
-=======
-            aOEL.enabled = false;
-            aOER.enabled = false;
->>>>>>> 374713b03d8751702654436cc911f037bc511406
+				}
+				if (Input.GetKey(KeyCode.DownArrow)) {
+					movementVelocity = -speed;
 
-            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, movementVelocity);
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && jumpingPermission == true) {
+					//aOEL.enabled = false;
+					//aOER.enabled = false;
 
-<<<<<<< HEAD
-        
-=======
-            onRope = false;
-            rb.isKinematic = false;
-            aOEL.enabled = false;
-            aOER.enabled = false;
-            if (grounded) {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump);
-			    print("jump");
-                run.Play("Jump animatio");
-            }
-        }
-        if (Input.GetKey(KeyCode.UpArrow)) {
-            movementVelocity = speed;
-
-        }
-        if (Input.GetKey(KeyCode.DownArrow)) {
-            movementVelocity = -speed;
-        }
-		if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) && !Input.anyKey) {
-			run.Play("Idle");
+				}
+					GetComponent<Rigidbody2D>().velocity = new Vector2 (GetComponent<Rigidbody2D>().velocity.x, movementVelocity);
+                }
 		}
-		if (Input.GetKeyUp(KeyCode.Z)) {
-			run.Play("Idle");
-		}
+				void OnTriggerStay2D(Collider2D other) {
+					if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow)) {
+			            rb.isKinematic = true;
+						onRope = true;
 
->>>>>>> 374713b03d8751702654436cc911f037bc511406
-    }
+					}
+					if (other.tag != ("Rope") && other.tag != ("Enemy") && other.tag != ("Enemy2")) {
+					grounded = true;
+		            }
 
-    void OnTriggerStay2D(Collider2D other) {
-        if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow)) {
-            rb.isKinematic = true;
-            onRope = true;
+				}
 
-        }
+				void OnTriggerExit2D(Collider2D other) {
+					if (other.tag == ("Rope")) {
+			            rb.isKinematic = false;
+						onRope = false;
 
-        grounded = true;
-    }
+					}
+			            grounded = false;
+				}
+				void OnTriggerEnter2D(Collider2D other) {
 
-    void OnTriggerExit2D(Collider2D other) {
-        if (other.tag == ("Rope")) {
-            rb.isKinematic = false;
-            onRope = false;
-        }
+					if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow)) {
+			            rb.isKinematic = true;
+						onRope = true;
 
-    }
-    void OnTriggerEnter2D(Collider2D other) {
-
-        if (other.tag == ("Rope") && Input.GetKey(KeyCode.UpArrow)) {
-            rb.isKinematic = true;
-            onRope = true;
-
-        }
-    }
-
-
-}
-
+					}
+				}
+			}

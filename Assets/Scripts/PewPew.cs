@@ -29,10 +29,6 @@ public class PewPew : MonoBehaviour {
 	void Update() {
         facingRight = playerMov.facingRight;
 
-		if (Input.GetKeyDown(KeyCode.Z)) {
-			run.Play("Shoot animation");
-		}
-
 		if (Input.GetKey(KeyCode.Z)) {
         
         if (playerMov.grounded == true) {
