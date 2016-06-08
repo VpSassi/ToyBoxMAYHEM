@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	public float dashForce;
 	public float dashTimer;
-	bool isDashing;
+	public bool isDashing;
 	public float dashDuration;
 	bool dashDirection;
 	public float dashCDTime;
@@ -159,10 +159,6 @@ public class PlayerMovement : MonoBehaviour {
 			}
 			GetComponent<Rigidbody2D>().velocity = new Vector2(movementVelocity, GetComponent<Rigidbody2D>().velocity.y);
 
-			// if both buttons are pressed, idle animation starts playing & player stops moving
-			//if ((Input.GetKeyDown(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow)) || (Input.GetKeyDown(KeyCode.RightArrow) && Input.GetKey(KeyCode.LeftArrow))) {
-			//	run.Play("Idle");
-			//}
 				if (Input.GetKeyDown(KeyCode.Space) && jumpingPermission == true) {
 
 					onRope = false;

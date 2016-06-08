@@ -6,18 +6,22 @@ public class AreaOfEffect : MonoBehaviour
 {
     public int aoeGunDamage = 2;
     PlayerMovement playerMov2;
+	PewPew gunn;
     public float horizontalRange;
     public float verticalRange;
     public float cooldown;
     float timeSinceLastShot;
     Rigidbody2D rB;
     public LayerMask enemyMask;
-    public Animator penetrator;
+    public bool penetrator;
+
     
     void Awake()
     {
         playerMov2 = GetComponent<PlayerMovement>();
+		gunn = GetComponent<PewPew>();
         rB = GetComponent<Rigidbody2D>();
+		
     }
     void Update()
     {
@@ -32,11 +36,12 @@ public class AreaOfEffect : MonoBehaviour
 
             if (timeSinceLastShot > cooldown) // shoot!
             {
-                //penetrator.Play("PenetratorAnimator");
+
                 timeSinceLastShot = 0;
 
                 if (playerMov2.onRope == false)
                 {
+					penetrator = true;
                     var pos = transform.position;
                     if (facingRight == true)
                     {
@@ -51,6 +56,7 @@ public class AreaOfEffect : MonoBehaviour
                         foreach (Collider2D c in Enemies) {
                             c.GetComponent<Zombear>().isHit = true;
                             c.GetComponent<Zombear>().HP -= aoeGunDamage;
+							
                         }
                     } else if (facingRight == false)
                     {
@@ -71,6 +77,7 @@ public class AreaOfEffect : MonoBehaviour
                 else {
                     rB.freezeRotation = true;
                     playerMov2.jumpingPermission = true;
+					penetrator = false;
                 }
             }
         }

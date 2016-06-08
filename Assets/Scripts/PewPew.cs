@@ -75,7 +75,6 @@ public class PewPew : MonoBehaviour {
                         }
 
                     }
-                        //Debug.DrawRay(transform.position, backwards, Color.white);
                 }
           }
         } else {

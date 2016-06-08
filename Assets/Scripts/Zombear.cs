@@ -20,6 +20,7 @@ public class Zombear : MonoBehaviour
     public float attackCDT;
     public bool attacking;
     public float pPushForce;
+	public float deathTime;
 
     public Sprite enemyHit;
     Sprite enemyNormal;
@@ -41,8 +42,6 @@ public class Zombear : MonoBehaviour
     void Awake()
     {
         pewPew = GetComponent<PewPew>();
-        aOER = GetComponent<AreaOfEffect>();
-        aOEL = GetComponent<AreaOfEffect>();
         sr = GetComponent<SpriteRenderer>();
         pm = GameObject.Find("Bunny").GetComponent<PlayerMovement>();
         enemyNormal = sr.sprite;
@@ -61,16 +60,15 @@ public class Zombear : MonoBehaviour
 
             transform.position = Vector2.MoveTowards(transform.position, target.position, step);
 
-            //zombear.Play("");
 
         }
 
         facingDirection = (target.position - transform.position).normalized;
         if ( facingDirection.x > 0) {
-            sr.flipX = true;
+            sr.flipX = false;
         }
         else {
-            sr.flipX = false;
+            sr.flipX = true;
         }
 
 
@@ -78,24 +76,28 @@ public class Zombear : MonoBehaviour
 
         if (isHit == true)
         {
-            sr.sprite = enemyHit;
-            //rbEnemy.MovePosition(transform.position + Vector3.up * hitForce * Time.deltaTime);
-            GetComponent<Rigidbody2D>().velocity = new Vector2(
-            GetComponent<Rigidbody2D>().velocity.x, hitForce);
-
             recovery += Time.deltaTime;
             if (recovery > recoveryCDT)
             {
                 recovery -= recoveryCDT;
                 isHit = false;
                 sr.sprite = enemyNormal;
+				GetComponent<Rigidbody2D>().velocity = new Vector2(
+            GetComponent<Rigidbody2D>().velocity.x, hitForce);
             }
 
         }
 
         if (HP <= 0)
         {
+			isChasing = false;
+			attacking = false;
+			deathTime += Time.deltaTime;
+
+			if (deathTime > 1.5) {
             Destroy(gameObject);
+			}
+
         }
 
         if (attacking == true)
@@ -139,11 +141,6 @@ public class Zombear : MonoBehaviour
             GetComponent<Rigidbody2D>().velocity = new Vector2(
             GetComponent<Rigidbody2D>().velocity.x, hitForce);
 
-        }
-
-        if (HP <= 0)
-        {
-           Destroy(gameObject);
         }
 
     }
