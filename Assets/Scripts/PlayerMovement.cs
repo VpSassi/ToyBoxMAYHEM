@@ -66,9 +66,6 @@ public class PlayerMovement : MonoBehaviour {
 
 	void Update() {
 
-
-
-
 		HPtext.text = "HP - " + playerHP;
 
 		if (isDashing == true && dashCD < 0) {
