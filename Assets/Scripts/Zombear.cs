@@ -22,8 +22,6 @@ public class Zombear : MonoBehaviour
     public float pPushForce;
 	public float deathTime;
 
-    public Sprite enemyHit;
-    Sprite enemyNormal;
     SpriteRenderer sr;
     AreaOfEffect aOER;
     AreaOfEffect aOEL;
@@ -44,7 +42,6 @@ public class Zombear : MonoBehaviour
         pewPew = GetComponent<PewPew>();
         sr = GetComponent<SpriteRenderer>();
         pm = GameObject.Find("Bunny").GetComponent<PlayerMovement>();
-        enemyNormal = sr.sprite;
         isChasing = true;
         target = pm.transform;
 
@@ -81,7 +78,6 @@ public class Zombear : MonoBehaviour
             {
                 recovery -= recoveryCDT;
                 isHit = false;
-                sr.sprite = enemyNormal;
 				GetComponent<Rigidbody2D>().velocity = new Vector2(
             GetComponent<Rigidbody2D>().velocity.x, hitForce);
             }
@@ -100,7 +96,7 @@ public class Zombear : MonoBehaviour
 
         }
 
-        if (attacking == true)
+        if (attacking == true && pm.playerHP > 0)
         {
 
             attack += Time.deltaTime;
@@ -125,7 +121,6 @@ public class Zombear : MonoBehaviour
         if (c.tag == "AreaOfEffectRight")
 
         {
-            sr.sprite = enemyHit;
             //rbEnemy.MovePosition(transform.position + Vector3.up * hitForce * Time.deltaTime);
             GetComponent<Rigidbody2D>().velocity = new Vector2(
             GetComponent<Rigidbody2D>().velocity.x, hitForce);
@@ -136,7 +131,6 @@ public class Zombear : MonoBehaviour
         if (c.tag == "AreaOfEffectLeft")
 
         {
-            sr.sprite = enemyHit;
             //rbEnemy.MovePosition(transform.position + Vector3.up * hitForce * Time.deltaTime);
             GetComponent<Rigidbody2D>().velocity = new Vector2(
             GetComponent<Rigidbody2D>().velocity.x, hitForce);
@@ -159,7 +153,6 @@ public class Zombear : MonoBehaviour
             {
                 recovery -= recoveryCDT;
                 isHit = false;
-                sr.sprite = enemyNormal;
             }
 
             if (c.tag == "AreaOfEffectLeft")
@@ -169,7 +162,6 @@ public class Zombear : MonoBehaviour
                 {
                     recovery -= recoveryCDT;
                     isHit = false;
-                    sr.sprite = enemyNormal;
                 }
             }
         }

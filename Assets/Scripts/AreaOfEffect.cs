@@ -29,7 +29,7 @@ public class AreaOfEffect : MonoBehaviour
         bool facingRight = playerMov2.facingRight;
         timeSinceLastShot += Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.X))
+        if (Input.GetKey(KeyCode.X) && playerMov2.onRope == false)
         {
             rB.freezeRotation = true;
             playerMov2.jumpingPermission = false;
@@ -54,8 +54,9 @@ public class AreaOfEffect : MonoBehaviour
                         //hit.collider.GetComponent<Zombear>().isHit = true;
                         //hit.collider.GetComponent<Zombear>().HP -= gunDamage;
                         foreach (Collider2D c in Enemies) {
-                            c.GetComponent<Zombear>().isHit = true;
-                            c.GetComponent<Zombear>().HP -= aoeGunDamage;
+							var z = c.GetComponent<Zombear>();
+							z.isHit = true;
+							c.GetComponent<Zombear>().HP -= aoeGunDamage;
 							
                         }
                     } else if (facingRight == false)
@@ -69,7 +70,8 @@ public class AreaOfEffect : MonoBehaviour
                         //hit.collider.GetComponent<Zombear>().isHit = true;
                         //hit.collider.GetComponent<Zombear>().HP -= gunDamage;
                         foreach (Collider2D c in Enemies) {
-                            c.GetComponent<Zombear>().isHit = true;
+							var z = c.GetComponent<Zombear>();
+							z.isHit = true;
                             c.GetComponent<Zombear>().HP -= aoeGunDamage;
                         }
                     }

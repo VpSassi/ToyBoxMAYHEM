@@ -39,8 +39,11 @@ public class PlayerMovement : MonoBehaviour {
 	//public float pRecoveryCDT;
 	//public float pHitForce;
 
+	public AudioSource mockery;
 	public AudioSource death;
 	public bool isDead;
+
+	public AudioSource ouch;
 
 	public Text HPtext;
 	public Text GameOverText;
@@ -105,6 +108,7 @@ public class PlayerMovement : MonoBehaviour {
 		}
 		if (playerIsHit == true) {
 			playerHP -= zb.enemyDMG;
+			ouch.Play();
 		}
 
 		if (Input.GetKeyDown(KeyCode.Escape) && playerHP <= 0) {
@@ -125,6 +129,7 @@ public class PlayerMovement : MonoBehaviour {
 			if (isDead == false) {
 				zb.isChasing = false;
 				death.Play();
+				mockery.Play();
 				isDead = true;
 				GameOverText.text = ("GAME OVER \n press Esc to reset");
 			}
